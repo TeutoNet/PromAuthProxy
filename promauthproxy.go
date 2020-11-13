@@ -60,6 +60,11 @@ type matcher struct {
 	IsRegex bool
 }
 
+func basicAuth(username, password string) string {
+        auth := username + ":" + password
+        return base64.StdEncoding.EncodeToString([]byte(auth))
+}
+
 // director modifies the incoming http.request to go to the specified innerAddress
 func director(r *http.Request) {
 	r.URL.Scheme = "http"
