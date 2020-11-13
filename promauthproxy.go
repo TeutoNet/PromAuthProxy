@@ -36,6 +36,9 @@ var (
 	// addresses and protocols
 	outerAddress = flag.String("web.listen-address", ":8080", "address exposed to outside")
 	innerAddress = flag.String("web.proxy-to", "127.0.0.1:9090", "address to proxy to")
+	
+        username = flag.String("username", "", "username to use for proxy-to")
+        password = flag.String("password", "", "password to use for proxy-to")
 
 	// misc
 	logTimestamps = flag.Bool("log.timestamps", false, "Log with timestamps")
@@ -61,6 +64,11 @@ type matcher struct {
 func director(r *http.Request) {
 	r.URL.Scheme = "http"
 	r.URL.Host = *innerAddress
+
+	if *username !="" && *password != "" {
+                r.Header.Set("Authorization", "Basic "+basicAuth(*username, *password))
+        }
+
 }
 
 // injectLabelIntoNewSilence modifies a new silence request to the alertmanager such that
